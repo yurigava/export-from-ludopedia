@@ -1,0 +1,24 @@
+{
+  "name": "export-from-ludopedia",
+  "version": "1.0.0",
+  "description": "Exporta dados da ludopedia",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yurigava/export-from-ludopedia.git"
+  },
+  "author": "Yuri Vaz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yurigava/export-from-ludopedia/issues"
+  },
+  "homepage": "https://github.com/yurigava/export-from-ludopedia#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}
