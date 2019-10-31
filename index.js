@@ -1,6 +1,17 @@
 const rp = require('request-promise');
 const $ = require('cheerio');
 
+const gameSelector = 'h3 > a'
+const dateSelector = 'dt:contains("Data")'
+const numberOfPlaysSelector = 'dt:contains("Quantidade")'
+const durationSelector = 'dt:contains("Duração")'
+const detailsSelector = 'dt:contains("Detalhes")'
+const usersSelector = 'table#tbl-jogadores img.user-avatar-sm.hidden-xs + *'
+const trophySelector = 'table#tbl-jogadores td:nth-child(2)'
+const pointsSelector = 'table#tbl-jogadores td:nth-child(3)'
+const obsSelector = 'table#tbl-jogadores td:nth-child(4)'
+const expansionsSelector = 'h3 + table#tbl-jogadores td:nth-child(1) > img.user-avatar-sm + *'
+
 let getLastPageNumber = async (userId) =>  {
   const url = `https://www.ludopedia.com.br/partidas?id_usuario=${userId}&v=detalhado`
   const html = await rp(url)
@@ -30,11 +41,25 @@ let getMatchInformation = async (url) => {
     .catch(err => {
       console.error(`Failed: ${err}`)
     })
-  console.log($('h3 > a', html).text())
-  console.log($('dt:contains("Data")', html).next('dd').text())
-  console.log($('dt:contains("Quantidade")', html).next('dd').text())
-  console.log($('dt:contains("Duração")', html).next('dd').text())
-  console.log($('dt:contains("Detalhes")', html).next('dd').text())
+  console.log($(gameSelector, html).text())
+  console.log($(dateSelector, html).next('dd').text())
+  console.log($(numberOfPlaysSelector, html).next('dd').text())
+  console.log($(durationSelector, html).next('dd').text())
+  console.log($(detailsSelector, html).next('dd').text())
+  const usersJs = $(usersSelector, html);
+  const trophyJs = $(trophySelector, html)
+  const pointsJs = $(pointsSelector, html)
+  const obsJs = $(obsSelector, html);
+  const expJs = $(expansionsSelector, html)
+  for (let i = 0; i < usersJs.length; i++) {
+    console.log(usersJs.eq(i).text().trim())
+    console.log(trophyJs.eq(i).has('i').length)
+    console.log(pointsJs.eq(i).text().trim())
+    console.log(obsJs.eq(i).text().trim())
+  }
+  for (let i = 0; i < expJs.length; i++) {
+    console.log(expJs.eq(i).text().trim())
+  }
 }
 
 let getQueryParam = (url, param) => {
@@ -53,6 +78,6 @@ let getQueryParam = (url, param) => {
     console.log(`getting ${i} page`)
     matches = matches.concat(await getMatches('59657', i));
   }*/
-  getMatchInformation('https://www.ludopedia.com.br/partida?id_partida=242817')
+  getMatchInformation('https://www.ludopedia.com.br/partida?id_partida=217581')
 })()
 
