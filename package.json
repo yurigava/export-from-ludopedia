@@ -4,7 +4,8 @@
   "description": "Exporta dados da ludopedia",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "npm test",
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
     "datejs": "^1.0.0-rc3",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "uuid": "^3.3.3",
     "yargs": "^14.2.0"
   }
 }

@@ -3,6 +3,11 @@ const $ = require('cheerio')
 require('datejs')
 const args = require('yargs').argv
 const fs = require('fs')
+const Game = require('./game.js')
+const Player = require('./player.js')
+const PlayerScore = require('./playerScore.js')
+const PlayFile = require('./playFile.js')
+const Play = require('./play.js')
 
 const gameSelector = 'h3 > a'
 const dateSelector = 'dt:contains("Data")'
@@ -45,6 +50,7 @@ const getMatchInformation = async (url) => {
       console.error(`Failed: ${err}`)
     })
   const play = new Play()
+  console.log(`Adding match. Game: ${$(gameSelector, html).text()}`)
   play.setGameId(await getGameAddingToMap($(gameSelector, html).text()))
   play.setDate(formatDate($(dateSelector, html).next('dd').text()))
   play.setDuration(getMinutesFromDuration($(durationSelector, html).next('dd').text()))
@@ -53,7 +59,7 @@ const getMatchInformation = async (url) => {
   const pointsJs = $(pointsSelector, html)
   const playerScores = []
   for (let i = 0; i < usersJs.length; i++) {
-    const userId = getPlayerIdAddingToMap($(usersJs.eq(i).text().trim()))
+    const userId = getPlayerIdAddingToMap(usersJs.eq(i).text().trim())
     const playerScore = new PlayerScore()
     playerScore.setUserId(userId)
     playerScore.setWinner(trophyJs.eq(i).has('i').length > 0)
@@ -110,8 +116,8 @@ const getBggGameInfo = async (gameName) => {
     .catch(err => {
       console.error(`Failed: ${err}`)
     })
-  const bggId = $('item', xml)[0].attr('id')
-  const year = $('item > yearpublished', xml)[0].attr('value')
+  const bggId = $('item', xml, {xmlMode: true}).attr('id')
+  const year = $('yearpublished', xml, {xmlMode: true}).attr('value')
   return [bggId, year]
 }
 
@@ -128,12 +134,11 @@ const getQueryParam = (url, param) => {
   console.log(`Getting matches for ludopedia user: ${args.userId}`)
   Date.i18n.setLanguage("pt-BR")
   const lastPageUrl = await getLastPageNumber(args.userId)
-  //const lastPage = getQueryParam(lastPageUrl, "pagina")
-  const lastPage = 1;
+  const lastPage = getQueryParam(lastPageUrl, "pagina")
   let matches = []
   for(let i = 1; i <= lastPage; i++) {
     console.log(`getting ${i} page`)
-    matches = matches.concat(await getMatches('59657', i));
+    matches = matches.concat(await getMatches(args.userId, i));
   }
   console.log(`${matches.length} matches found. Getting information`)
   let plays = []
@@ -149,7 +154,6 @@ const getQueryParam = (url, param) => {
   fs.writeFile('export.bgsplay', JSON.stringify(playFileObject), 'utf8', () => {
     console.log(`All Matches exported successfully. Verify the users in the file before exporting.`)
   })
-  //let plays = await getMatchInformation('https://www.ludopedia.com.br/partida?id_partida=217581')
 })().catch(err => {
   console.error(err)
 })

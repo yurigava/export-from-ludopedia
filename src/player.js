@@ -1,9 +1,11 @@
-class Player {
+const uuidv1 = require('uuid/v1')
+
+module.exports = class Player {
   constructor(id, name) {
-    this.uuid = ''
+    this.uuid = uuidv1()
     this.id = id
     this.isAnononymous = false
-    this.bggUserName = ''
+    this.bggUsername = ''
     this.name = name
   }
 }

@@ -1,4 +1,4 @@
-class PlayerScore {
+module.exports = class PlayerScore {
   constructor() {
     this.newPlayer = false
     this.startPlayer = false

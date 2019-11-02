@@ -1,8 +1,11 @@
-class Play {
+const uuidv1 = require('uuid/v1')
+require('datejs')
+
+module.exports = class Play {
   constructor() {
-    this.uuid = ''
-    this.modificationName = new Date()
-    this.entryDate = new Date()
+    this.uuid = uuidv1()
+    this.modificationName = new Date().toString("yyyy-MM-dd HH:mm:ss")
+    this.entryDate = new Date().toString("yyyy-MM-dd HH:mm:ss")
     this.usesTeams = false
     this.ignored = false
     this.manualWinner = true
