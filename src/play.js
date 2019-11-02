@@ -28,4 +28,8 @@ module.exports = class Play {
   setPlayerScores(playerScores) {
     this.playerScores = playerScores
   }
+
+  setNewUuid() {
+    this.uuid = uuidv1()
+  }
 }

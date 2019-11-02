@@ -68,7 +68,11 @@ const getMatchInformation = async (url) => {
   }
   play.setPlayerScores(playerScores)
   const numberOfPlays = Number(($(numberOfPlaysSelector, html).next('dd').text()))
-  return Array(numberOfPlays).fill(play);
+  let plays = Array(numberOfPlays).fill(play);
+  plays.forEach(play => {
+    play.setNewUuid()
+  })
+  return play
 }
 
 const getPlayerIdAddingToMap = (playerName) => {
@@ -104,11 +108,10 @@ const getGameAddingToMap = async (gameName) => {
     gameId = gamesMap.get(gameName).id
   } else {
     const [bggId, year] = await getBggGameInfo(gameName)
-    let newGame
-    if(bggId === null) {
-      newGame = new Game(objectIdCount++, gameName, undefined, undefined)
-    } else {
-      newGame = new Game(objectIdCount++, gameName, Number(bggId), Number(year))
+    let newGame = new Game(objectIdCount++, gameName, Number(bggId), Number(year))
+    if(bggId == null) {
+      newGame.bggId = undefined
+      newGame.bggYear = undefined
     }
     gamesMap.set(gameName, newGame)
     gameId = newGame.id
@@ -134,7 +137,6 @@ const getQueryParam = (url, param) => {
   return regex.exec(url)[1]
 }
 
-
 (async () => {
   if(!args.userId)
     throw 'No user provided. please use the "--userId=\<LudopediaUser\>" option'
@@ -144,7 +146,7 @@ const getQueryParam = (url, param) => {
   const lastPage = getQueryParam(lastPageUrl, "pagina")
   let matches = []
   for(let i = 1; i <= lastPage; i++) {
-    console.log(`getting ${i} page`)
+    console.log(`getting page ${i}`)
     matches = matches.concat(await getMatches(args.userId, i));
   }
   console.log(`${matches.length} matches found. Getting information`)
