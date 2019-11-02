@@ -1,6 +1,7 @@
 const rp = require('request-promise')
 const $ = require('cheerio')
 require('datejs')
+const uuidv1 = require('uuid/v1')
 const args = require('yargs').argv
 const fs = require('fs')
 const Game = require('./game.js')
@@ -69,10 +70,17 @@ const getMatchInformation = async (url) => {
   play.setPlayerScores(playerScores)
   const numberOfPlays = Number(($(numberOfPlaysSelector, html).next('dd').text()))
   let plays = Array(numberOfPlays).fill(play);
-  plays.forEach(play => {
-    play.setNewUuid()
-  })
-  return play
+  if(plays.length > 1) {
+    plays = plays.map((mappedPlay, index) => {
+      let newPlay = Object.assign({}, mappedPlay);
+      const timeToAdd = mappedPlay.durationMin * index
+      const newDate = Date.parse(mappedPlay.playDate).add(timeToAdd).minute()
+      newPlay.playDate = formatDate(newDate)
+      newPlay.uuid = uuidv1()
+      return newPlay
+    })
+  }
+  return plays
 }
 
 const getPlayerIdAddingToMap = (playerName) => {
@@ -160,7 +168,8 @@ const getQueryParam = (url, param) => {
   let gamesList = Array.from(gamesMap.values())
   console.log(`${gamesList.length} different games found.`)
   const playFileObject = new PlayFile(playersList, gamesList, plays)
-  fs.writeFile('export.bgsplay', JSON.stringify(playFileObject), 'utf8', () => {
+  const fileNameDate = new Date().toString("yyyy-MM-dd HH:mm:ss")
+  fs.writeFile(`ludopedia-export-${fileNameDate}.bgsplay`, JSON.stringify(playFileObject), 'utf8', () => {
     console.log(`All Matches exported successfully. Verify the users in the file before exporting.`)
   })
 })().catch(err => {
