@@ -104,7 +104,12 @@ const getGameAddingToMap = async (gameName) => {
     gameId = gamesMap.get(gameName).id
   } else {
     const [bggId, year] = await getBggGameInfo(gameName)
-    const newGame = new Game(objectIdCount++, gameName, Number(bggId), Number(year))
+    let newGame
+    if(bggId === null) {
+      newGame = new Game(objectIdCount++, gameName, undefined, undefined)
+    } else {
+      newGame = new Game(objectIdCount++, gameName, Number(bggId), Number(year))
+    }
     gamesMap.set(gameName, newGame)
     gameId = newGame.id
   }
@@ -112,7 +117,9 @@ const getGameAddingToMap = async (gameName) => {
 }
 
 const getBggGameInfo = async (gameName) => {
-  const xml = await rp(encodeURI(`https://www.boardgamegeek.com/xmlapi2/search?type=boardgame&query=${gameName}&exact=1`))
+  let sanitizedName = encodeURIComponent(gameName)
+  sanitizedName = sanitizedName.replace('\'', '%27')
+  const xml = await rp(`https://www.boardgamegeek.com/xmlapi2/search?type=boardgame&query=${sanitizedName}&exact=1`)
     .catch(err => {
       console.error(`Failed: ${err}`)
     })
