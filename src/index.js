@@ -46,10 +46,7 @@ const getMatches = async (userId, page) => {
 }
 
 const getMatchInformation = async (url) => {
-  const html = await rp(url)
-    .catch(err => {
-      console.error(`Failed: ${err}`)
-    })
+  const html = getInfoFromLudopediaWithRetry(url, 10)
   const play = new Play()
   console.log(`Adding match. Game: ${$(gameSelector, html).text()}`)
   play.setGameId(await getGameAddingToMap($(gameSelector, html).text()))
@@ -69,10 +66,10 @@ const getMatchInformation = async (url) => {
   }
   play.setPlayerScores(playerScores)
   const numberOfPlays = Number(($(numberOfPlaysSelector, html).next('dd').text()))
-  let plays = Array(numberOfPlays).fill(play);
-  if(plays.length > 1) {
+  let plays = Array(numberOfPlays).fill(play)
+  if (plays.length > 1) {
     plays = plays.map((mappedPlay, index) => {
-      let newPlay = Object.assign({}, mappedPlay);
+      let newPlay = Object.assign({}, mappedPlay)
       const timeToAdd = mappedPlay.durationMin * index
       const newDate = Date.parse(mappedPlay.playDate).add(timeToAdd).minute()
       newPlay.playDate = formatDate(newDate)
@@ -81,6 +78,18 @@ const getMatchInformation = async (url) => {
     })
   }
   return plays
+}
+
+const getInfoFromLudopediaWithRetry = async (url, retries) => {
+  try {
+    return await rp(url)
+  } catch (err) {
+    console.log(`Retrying to get information. Exception was: ${err}`)
+    if(retries > 0)
+      return await getInfoFromLudopediaWithRetry(url, retries - 1)
+    else
+      console.error(`Error getting information from Ludopedia`)
+  }
 }
 
 const getPlayerIdAddingToMap = (playerName) => {
@@ -96,7 +105,7 @@ const getPlayerIdAddingToMap = (playerName) => {
 }
 
 const formatDate = (date) => {
-  return Date.parse(date).toString("yyyy-MM-dd HH:mm:ss")
+  return Date.parse(date).toString('yyyy-MM-dd HH:mm:ss')
 }
 
 const getMinutesFromDuration = (duration) => {
@@ -112,12 +121,12 @@ const getMinutesFromDuration = (duration) => {
 
 const getGameAddingToMap = async (gameName) => {
   let gameId
-  if(gamesMap.has(gameName)) {
+  if (gamesMap.has(gameName)) {
     gameId = gamesMap.get(gameName).id
   } else {
     const [bggId, year] = await getBggGameInfo(gameName)
     let newGame = new Game(objectIdCount++, gameName, Number(bggId), Number(year))
-    if(bggId == null) {
+    if (bggId == null) {
       newGame.bggId = undefined
       newGame.bggYear = undefined
     }
@@ -146,21 +155,21 @@ const getQueryParam = (url, param) => {
 }
 
 (async () => {
-  if(!args.userId)
+  if (!args.userId)
     throw 'No user provided. please use the "--userId=\<LudopediaUser\>" option'
   getPlayerIdAddingToMap('Ludopedia')
   console.log(`Getting matches for ludopedia user: ${args.userId}`)
-  Date.i18n.setLanguage("pt-BR")
+  Date.i18n.setLanguage('pt-BR')
   const lastPageUrl = await getLastPageNumber(args.userId)
-  const lastPage = getQueryParam(lastPageUrl, "pagina")
+  const lastPage = getQueryParam(lastPageUrl, 'pagina')
   let matches = []
-  for(let i = 1; i <= lastPage; i++) {
+  for (let i = 1; i <= lastPage; i++) {
     console.log(`getting page ${i}`)
-    matches = matches.concat(await getMatches(args.userId, i));
+    matches = matches.concat(await getMatches(args.userId, i))
   }
   console.log(`${matches.length} matches found. Getting information`)
   let plays = []
-  for(let i = 0; i < matches.length; i++) {
+  for (let i = 0; i < matches.length; i++) {
     plays = plays.concat(await getMatchInformation(matches[i]))
   }
   console.log(`${plays.length} plays found.`)
@@ -169,7 +178,7 @@ const getQueryParam = (url, param) => {
   let gamesList = Array.from(gamesMap.values())
   console.log(`${gamesList.length} different games found.`)
   const playFileObject = new PlayFile(playersList, gamesList, plays)
-  const fileNameDate = new Date().toString("yyyy-MM-dd HH:mm:ss")
+  const fileNameDate = new Date().toString('yyyy-MM-dd-HH-mm-ss')
   fs.writeFile(`ludopedia-export-${fileNameDate}.bgsplay`, JSON.stringify(playFileObject), 'utf8', () => {
     console.log(`All Matches exported successfully. Verify the users in the file before exporting.`)
   })
