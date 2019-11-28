@@ -148,6 +148,7 @@ const getQueryParam = (url, param) => {
 (async () => {
   if(!args.userId)
     throw 'No user provided. please use the "--userId=\<LudopediaUser\>" option'
+  getPlayerIdAddingToMap('Ludopedia')
   console.log(`Getting matches for ludopedia user: ${args.userId}`)
   Date.i18n.setLanguage("pt-BR")
   const lastPageUrl = await getLastPageNumber(args.userId)
