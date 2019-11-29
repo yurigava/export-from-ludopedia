@@ -46,7 +46,7 @@ const getMatches = async (userId, page) => {
 }
 
 const getMatchInformation = async (url) => {
-  const html = getInfoFromLudopediaWithRetry(url, 10)
+  const html = await getInfoFromLudopediaWithRetry(url, 10)
   const play = new Play()
   console.log(`Adding match. Game: ${$(gameSelector, html).text()}`)
   play.setGameId(await getGameAddingToMap($(gameSelector, html).text()))
@@ -87,8 +87,10 @@ const getInfoFromLudopediaWithRetry = async (url, retries) => {
     console.log(`Retrying to get information. Exception was: ${err}`)
     if(retries > 0)
       return await getInfoFromLudopediaWithRetry(url, retries - 1)
-    else
+    else {
       console.error(`Error getting information from Ludopedia`)
+      throw "Error getting Game"
+    }
   }
 }
 
