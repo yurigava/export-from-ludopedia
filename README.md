@@ -19,11 +19,12 @@
 2. Rode os seguintes comandos no termux:
     1. `pkg update`
     2. `pkg install nodejs`
-    3. `pkg install git`
-    4. `git clone https://github.com/yurigava/export-from-ludopedia.git`
-    5. `cd export-from-ludopedia`
-    6. `npm install`
-    7. `node index.js --user-id=<SeuIdDaLudopedia>`
+    3. `npm install -g npm`
+    4. `pkg install git`
+    5. `git clone https://github.com/yurigava/export-from-ludopedia.git`
+    6. `cd export-from-ludopedia`
+    7. `npm install`
+    8. `node index.js --user-id=<SeuIdDaLudopedia>`
 3. Quando terminar de rodar, mande o arquivo para o BGstats. Digite no termux:
     1. `termux-open ludo`
 4. E aperte o botão de tab (e enter)
