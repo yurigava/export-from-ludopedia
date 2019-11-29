@@ -27,8 +27,11 @@ const getLastPageNumber = async (userId) => {
     .catch(err => {
       console.error(`Failed: ${err}`)
     })
-  let lastPageJson = $('a[title = "Última Página"]', html)
-  return lastPageJson[0].attribs.href
+  const lastPageJson = $('a[title = "Última Página"]', html)
+  let lastPageUrl = url + '&pagina=1'
+  if (lastPageJson[0])
+    lastPageUrl = lastPageJson[0].attribs.href
+  return lastPageUrl
 }
 
 const getMatches = async (userId, page) => {

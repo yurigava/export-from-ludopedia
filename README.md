@@ -12,7 +12,7 @@
 3. Entre na pasta do projeto
 4. Rode na linha de comando (cmd/shell):
 	1. `npm install`
-	2. `node src --userId=<SeuIdDaLudopedia>`
+	2. `node src --userId=SeuIdDaLudopedia`
 5. Envie o arquivo gerado `ludopedia-export-yyyy-MM-dd HH:mm:ss.bgsplay` para o seu celular, e abra com o aplicativo BGStats
 
 ## Rodando no Android
@@ -25,7 +25,7 @@
     5. `git clone https://github.com/yurigava/export-from-ludopedia.git`
     6. `cd export-from-ludopedia`
     7. `npm install`
-    8. `node src --user-id=<SeuIdDaLudopedia>`
+    8. `node src --user-id=SeuIdDaLudopedia`
 3. Quando terminar de rodar, mande o arquivo para o BGstats. Digite no termux:
     1. `termux-open ludo`
 4. E aperte o botão de tab (e enter)
