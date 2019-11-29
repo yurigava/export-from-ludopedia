@@ -1,10 +1,11 @@
 # Baixa partidas jogadas da Ludopedia
 ## Requerimentos
 * Você irá precisar do aplicativo de android BGstats, que é pago.
+    * Não se esqueça de logar no BGG dentro do BGstats, e ativar a sincronia.
 * Seu Id numérico da Ludopedia:
-	* Vá para a página de partidas e pegue o número no final do link.
-	* Exemplo: https://www.ludopedia.com.br/partidas?id_usuario=59657
-	* Seu Id é: 59657
+    * Vá para a página de partidas e pegue o número no final do link.
+    * Exemplo: https://www.ludopedia.com.br/partidas?id_usuario=59657
+    * Seu Id é: 59657
 ## Rodando no computador
 1. Instale o [node.js](https://nodejs.org/en/download/)
 2. Baixe o Código (git ou download do Zip)
