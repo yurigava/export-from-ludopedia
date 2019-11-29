@@ -24,7 +24,7 @@
     5. `git clone https://github.com/yurigava/export-from-ludopedia.git`
     6. `cd export-from-ludopedia`
     7. `npm install`
-    8. `node index.js --user-id=<SeuIdDaLudopedia>`
+    8. `node src --user-id=<SeuIdDaLudopedia>`
 3. Quando terminar de rodar, mande o arquivo para o BGstats. Digite no termux:
     1. `termux-open ludo`
 4. E aperte o botão de tab (e enter)
