@@ -27,6 +27,7 @@
     7. `npm install`
     8. `node src --user-id=SeuIdDaLudopedia`
 3. Quando terminar de rodar, mande o arquivo para o BGstats. Digite no termux:
-    1. `termux-open ludo`
+    1. `termux-setup-storage` e dê as permissões.
+    2. `termux-open --send ludo`
 4. E aperte o botão de tab (e enter)
 5. Selecione o BGStats na lista de aplicativos.
